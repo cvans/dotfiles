@@ -3,7 +3,7 @@
 
 if has("gui_macvim")
 
-  set guifont=Meslo\ LG\ S\ for\ Powerline:h13 " Normally Menlo
+  set guifont=PragmataPro:h15 
   set guioptions-=T  " remove toolbar
   set stal=2 " turn on tabs by default
   set transparency=0

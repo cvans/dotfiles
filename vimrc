@@ -25,7 +25,6 @@ set backspace=indent,eol,start " Backspace deletes characters in insert mode
 set complete-=i " Disable scanning included files for autocomplete
 
 " Colors ----------------------------------------------------------------------
-
 if has('syntax') && !exists('g:syntax_on')
   syntax enable
   set background=dark
@@ -70,5 +69,11 @@ else
   set backupdir=/tmp//
 end
 
-" Pathogen --------------------------------------------------------------------
-execute pathogen#infect()
+" Plug  -----------------------------------------------------------------------
+call plug#begin('~/.vim/plugged')
+
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'elixir-lang/vim-elixir'
+
+call plug#end()
