@@ -1,8 +1,7 @@
-""" Ivan Charles
 """ .vimrc
 """ Remember to type :help COMMAND to review help for a specific command
 """
-""" To install in Windows, put your vimrc and gvimrc under the vimfiles
+""" To install in Windows, place your vimrc and gvimrc under the vimfiles
 """ directory on your userfolder. The vimfiles folder acts as the .vim
 """ folder on unix.
 """
