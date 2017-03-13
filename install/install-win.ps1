@@ -9,8 +9,8 @@ $vimDotfilePath = Join-Path -Path $pwd -ChildPath "..\vim"
 
 
 # VIM ------------------------------------------------------------------------
-If (!(Test-Path "$home\vimfiles")) {
-    New-Item -Path "$home\vimfiles" -ItemType Directory
+If (!(Test-Path $vimPath)) {
+    New-Item -Path $vimPath -ItemType Directory
 }
 
 New-Item -ItemType SymbolicLink -Path "$vimDotfilePath\vimrc" -ChildPath "$home\vimfiles\vimrc"
