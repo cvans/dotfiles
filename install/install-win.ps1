@@ -1,5 +1,8 @@
 # Dotfiles install script for Windows. 
-# To use this, open powershell and execute the script. 
+# To use this, open powershell with administrator rights
+# and run the script. 
+
+#Requires -RunAsAdministrator
 
 # Script Variables
 $vimPath = "~\vimfiles"
@@ -25,8 +28,8 @@ If (!(Test-Path "$vimPath\autoload")) {
     New-Item -Path "$vimPath\autoload" -ItemType Directory
 }
 
-New-Item -ItemType SymbolicLink -Path "$vimDotfilePath\vimrc" -ChildPath "$vimPath\vimrc"
-New-Item -ItemType SymbolicLink -Path "$vimDotfilePath\gvimrc" -ChildPath "$vimPath\gvimrc"
+New-Item -ItemType SymbolicLink -Target "$vimDotfilePath\vimrc" -Path "$vimPath" -Name "vimrc"
+New-Item -ItemType SymbolicLink -Target "$vimDotfilePath\gvimrc" -Path "$vimPath" -Name "gvimrc"
 
 # Install vim-plug
 $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
