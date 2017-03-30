@@ -7,6 +7,21 @@
 """
 """ To switch buffers, remember to use :b plus the name of the buffer.
 
+" Plug  -----------------------------------------------------------------------
+call plug#begin('~/.vim/plugged')
+
+" General plugins
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'scrooloose/nerdtree'
+
+" Language specific
+Plug 'vim-javascript'
+Plug 'elixir-lang/vim-elixir'
+
+call plug#end()
+
 " Tabs and Identation ---------------------------------------------------------
 
 if exists('autocmd')
@@ -67,12 +82,3 @@ else
   set directory=/tmp//
   set backupdir=/tmp//
 end
-
-" Plug  -----------------------------------------------------------------------
-call plug#begin('~/.vim/plugged')
-
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'elixir-lang/vim-elixir'
-
-call plug#end()
