@@ -20,15 +20,22 @@ If (!(Get-Module -ListAvailable -Name oh-my-posh)) {
 }
 
 # VIM ------------------------------------------------------------------------
-If (!(Test-Path $vimPath)) {
+If (!(Test-Path -Path $vimPath)) {
     New-Item -Path $vimPath -ItemType Directory
 }
 
-If (!(Test-Path "$vimPath\autoload")) {
+If (!(Test-Path -Path "$vimPath\autoload")) {
     New-Item -Path "$vimPath\autoload" -ItemType Directory
 }
 
+If (Test-Path -Path "$vimPath\vimrc" -PathType leaf) {
+    Remove-Item "$vimPath\vimrc"
+}
 New-Item -ItemType SymbolicLink -Target "$vimDotfilePath\vimrc" -Path "$vimPath" -Name "vimrc"
+
+If (Test-Path -Path "$vimPath\gvimrc" -PathType leaf) {
+    Remove-Item "$vimPath\gvimrc"
+}
 New-Item -ItemType SymbolicLink -Target "$vimDotfilePath\gvimrc" -Path "$vimPath" -Name "gvimrc"
 
 # Install vim-plug
