@@ -8,16 +8,7 @@
 $vimPath = "~\vimfiles"
 $vimDotfilePath = Join-Path -Path $pwd -ChildPath "..\vim"
 
-# PS Profile -----------------------------------------------------------------
-# Install posh-git
-If (!(Get-Module -ListAvailable -Name posh-git)) {
-    Install-Module posh-git -Scope CurrentUser
-}
-
-# Install oh-my-posh
-If (!(Get-Module -ListAvailable -Name oh-my-posh)) {
-    Install-Module oh-my-posh -Scope CurrentUser
-}
+# PS stuff -----------------------------------------------------------------
 
 # VIM ------------------------------------------------------------------------
 If (!(Test-Path -Path $vimPath)) {

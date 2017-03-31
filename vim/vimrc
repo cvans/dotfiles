@@ -16,7 +16,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdtree'
 
 " Theming
-Plug 'arcticicestudio/nord-vim'
+Plug 'chriskempson/base16-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -57,10 +57,12 @@ set autoindent " Automatically set the indent of a new line (local to buffer)
 set backspace=indent,eol,start " Backspace deletes characters in insert mode
 set complete-=i " Disable scanning included files for autocomplete
 
-" Colors ---------------------------------------------------------------------
-  syntax enable
-  set background=dark
-  colorscheme nord
+" Themeing & Colors ---------------------------------------------------------
+
+syntax enable
+if g:os == 'Windows'
+  let g:airline_theme='simple'
+endif
 
 " Misc Stuff -----------------------------------------------------------------
 
