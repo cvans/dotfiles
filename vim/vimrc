@@ -7,7 +7,8 @@
 """
 """ To switch buffers, remember to use :b plus the name of the buffer.
 
-" Plug  -----------------------------------------------------------------------
+" Plug  ----------------------------------------------------------------------
+
 call plug#begin('~/.vim/plugged')
 
 " General plugins
@@ -22,7 +23,22 @@ Plug 'elixir-lang/vim-elixir'
 
 call plug#end()
 
-" Tabs and Identation ---------------------------------------------------------
+" Obtain system information --------------------------------------------------
+"   To check the operating system in other places in the code, use 
+"     if g:os == "Darwin"
+"       ...
+"     endif
+"   "Windows", "Linux" and "Darwin" are valid values.
+
+if !exists("g:os")
+    if has("win64") || has("win32") || has("win16")
+        let g:os = "Windows"
+    else
+        let g:os = substitute(system('uname'), '\n', '', '')
+    endif
+endif
+
+" Tabs and Identation --------------------------------------------------------
 
 if exists('autocmd')
   filetype plugin indent on
@@ -38,14 +54,12 @@ set autoindent " Automatically set the indent of a new line (local to buffer)
 set backspace=indent,eol,start " Backspace deletes characters in insert mode
 set complete-=i " Disable scanning included files for autocomplete
 
-" Colors ----------------------------------------------------------------------
-if has('syntax') && !exists('g:syntax_on')
+" Colors ---------------------------------------------------------------------
   syntax enable
   set background=dark
-  colorscheme Tomorrow-Night
-endif
+  "colorscheme Tomorrow-Night
 
-" Misc Stuff ------------------------------------------------------------------
+" Misc Stuff -----------------------------------------------------------------
 
 set nrformats-=octal " Dont use octals when doing calculations <C-a> or <C-x>
 
@@ -73,9 +87,9 @@ set encoding=utf-8
 let g:airline_powerline_fonts = 1 " Airline font configuration
 let g:airline#extensions#tabline#enabled = 1
 
-" Working folders -------------------------------------------------------------
+" Working folders ------------------------------------------------------------
 
-if has("win32") || has("win64")
+if g:os == "Windows"
   set directory=$TMP\\
   set backupdir=$TMP\\
 else
