@@ -13,9 +13,12 @@ call plug#begin('~/.vim/plugged')
 
 " General plugins
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/nerdtree'
+
+" Theming
+Plug 'arcticicestudio/nord-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/nerdtree'
 
 " Language specific
 Plug 'vim-javascript'
@@ -24,7 +27,7 @@ Plug 'elixir-lang/vim-elixir'
 call plug#end()
 
 " Obtain system information --------------------------------------------------
-"   To check the operating system in other places in the code, use 
+"   To check the operating system in other places in the code, use
 "     if g:os == "Darwin"
 "       ...
 "     endif
@@ -57,7 +60,7 @@ set complete-=i " Disable scanning included files for autocomplete
 " Colors ---------------------------------------------------------------------
   syntax enable
   set background=dark
-  "colorscheme Tomorrow-Night
+  colorscheme nord
 
 " Misc Stuff -----------------------------------------------------------------
 

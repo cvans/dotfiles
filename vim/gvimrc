@@ -20,7 +20,6 @@ elseif g:os == "Windows"
   set guioptions-=r " remove right-hand scroll bar
   set clipboard=unnamed " copy and paste to the windows clipboard by default
   set go+=a " visual selections automatically copy to the clipboard
-  colorscheme Tomorrow-Night
 
 end
 
