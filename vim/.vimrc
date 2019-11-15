@@ -22,6 +22,7 @@ Plug 'tpope/vim-fugitive'
 " Language specific
 Plug 'pangloss/vim-javascript'
 Plug 'elixir-lang/vim-elixir'
+Plug 'vim-ruby/vim-ruby'
 
 " Theming
 Plug 'vim-airline/vim-airline'
