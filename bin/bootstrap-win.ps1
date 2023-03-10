@@ -46,14 +46,14 @@ powershell.exe -NoProfile -Command "& {[System.Environment]::Exit(0)}"
 
 # Install Scoop
 Write-Host "[INFO] Starting to install scoop..."
-iwr -useb get.scoop.sh | iex
+Invoke-WebRequest -useb get.scoop.sh | Invoke-Expression
 Write-Host "[INFO] Finished installing scoop..."
 
 # Add scoop buckets
 foreach ($bucket in $scoopbuckets) {
-    Write-Host "[INFO] Starting to add bucket $app..." 
+    Write-Host "[INFO] Starting to add bucket $bucket..." 
     scoop bucket add $bucket
-    Write-Host "[INFO] Finished adding bucket $app..." 
+    Write-Host "[INFO] Finished adding bucket $bucket..." 
 }
 
 # Add scoop apps
