@@ -40,11 +40,6 @@ return require('packer').startup(function(use)
         run = ':TSUpdate'
     }
 
-<<<<<<< HEAD
-    if packer_bootstrap then
-	require('packer').sync()
-    end
-=======
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {
@@ -67,6 +62,8 @@ return require('packer').startup(function(use)
         }
     }
 
->>>>>>> c19f50c (nvim config updates)
+    if packer_bootstrap then
+	require('packer').sync()
+    end
 end)
 
