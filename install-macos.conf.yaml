@@ -15,6 +15,4 @@
     -
       command: git submodule update --init --recursive
       description: install submodules
-    -
-      command: git -C ~/.local/share/nvim/site/pack/packer/start/packer.nvim pull || git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-      description: install neovim packer
+
