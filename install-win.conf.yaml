@@ -1,0 +1,15 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- clean:
+    - '~'
+
+- link:
+    ~/AppData/Local/nvim: nvim
+
+- shell:
+    -
+      command: git submodule update --init --recursive
+      description: install submodules

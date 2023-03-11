@@ -29,6 +29,7 @@ $scoopbuckets = @(
 $scoopapps = @(
     "mpv",
     "terminal-icons",
+    "gcc", # need this for treesiter to work
     "Cascadia-Code",
     "FiraCode",
     "JetBrains-Mono"
