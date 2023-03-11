@@ -29,7 +29,7 @@ $scoopbuckets = @(
 $scoopapps = @(
     "mpv",
     "terminal-icons",
-    "gcc", # need this for treesiter to work
+    "gcc", 
     "Cascadia-Code",
     "FiraCode",
     "JetBrains-Mono"
@@ -60,7 +60,7 @@ foreach ($bucket in $scoopbuckets) {
 # Add scoop apps
 foreach ($app in $scoopapps) {
     Write-Host "[INFO] Starting to install $app..." 
-    scoop install add $bucket
+    scoop install $app
     Write-Host "[INFO] Finished installing $app..." 
 }
 
