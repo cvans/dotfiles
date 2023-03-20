@@ -10,11 +10,13 @@
     ~/.config/nvim: nvim
     ~/.config/tmux/tmux.conf: tmux/tmux.conf
     ~/.tmux/plugins/tpm: tmux/plugins/tpm
-    ~/.gitconfig: git/.gitconfig
     ~/.gitignore_global: git/.gitignore_global
 
 - shell:
     -
       command: git submodule update --init --recursive
       description: install submodules
+    -
+      command: cp -n git/.gitconfig ~/.gitconfig
+      description: install gitconfig
 
