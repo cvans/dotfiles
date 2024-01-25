@@ -1,5 +1,3 @@
-require("cvans")
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -12,8 +10,7 @@ if not vim.loop.fs_stat(lazypath) then
     lazypath,
   })
 end
-
 vim.opt.rtp:prepend(lazypath)
 
--- Load lazy plugins
+require("vim-options")
 require('lazy').setup("plugins")
