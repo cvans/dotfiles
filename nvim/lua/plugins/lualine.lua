@@ -3,9 +3,15 @@ return {
 	config = function()
 		require("lualine").setup({
 			options = {
+                icons_enabled = true,
 				theme = "tokyonight",
                 globalstatus = true,
+                component_separators = '',
+                section_separators = { left = '', right = '' },
 			},
+            sections = {
+                lualine_x = {'filetype'}
+            },
 		})
 	end,
 }
