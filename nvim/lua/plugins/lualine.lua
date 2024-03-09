@@ -7,10 +7,13 @@ return {
 				theme = "tokyonight",
                 globalstatus = true,
                 component_separators = '',
-                section_separators = { left = '', right = '' },
+                -- section_separators = { left = '', right = '' },
+                section_separators = '',
 			},
             sections = {
-                lualine_x = {'filetype'}
+                lualine_x = {
+                    'filetype',
+                }
             },
 		})
 	end,
