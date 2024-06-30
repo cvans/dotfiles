@@ -8,6 +8,7 @@
 
 - link:
     ~/.config/nvim: nvim
+    ~/.config/yazi: yazi
     ~/.config/tmux/tmux.conf: tmux/tmux.conf
     ~/.tmux/plugins/tpm: tmux/plugins/tpm
     ~/.gitignore_global: git/.gitignore_global
