@@ -4,17 +4,12 @@ return {
 		require("lualine").setup({
 			options = {
 				icons_enabled = true,
-				theme = "tokyonight",
+				theme = "rose-pine",
 				-- globalstatus = true,
 				component_separators = "",
-				-- section_separators = { left = '', right = '' },
-				section_separators = "",
+				section_separators = { left = "", right = "" },
+				--section_separators = "",
 			},
-			-- sections = {
-			-- 	lualine_x = {
-			-- 		"filetype",
-			-- 	},
-			-- },
 		})
 	end,
 }
