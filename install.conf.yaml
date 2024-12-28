@@ -6,10 +6,19 @@
 - clean:
     - '~'
 
+- create:
+    - ~/.config/ghostty
+
 - link:
     ~/.config/nvim: nvim
     ~/.config/yazi: yazi
-    ~/.config/ghostty: ghostty
+    ~/.config/ghostty/config: ghostty/config
+    ~/.config/ghostty/macos-config:
+      if: '[ `uname` = Darwin ]'
+      path: ghostty/macos-config
+    ~/.config/ghostty/linux-config:
+      if: '[ `uname` = Linux ]'
+      path: ghostty/linux-config
     ~/.config/tmux/tmux.conf: tmux/tmux.conf
 
 - shell:
@@ -17,9 +26,9 @@
       command: git submodule update --init --recursive
       description: install submodules
     -
-      command: cp -n git/.gitconfig ~/.gitconfig
+      command: cp -n git/.gitconfig ~/.gitconfig || true
       description: install gitconfig
     -
-      command: cp -n git/.gitignore_global ~/.gitignore_global
+      command: cp -n git/.gitignore_global ~/.gitignore_global || true
       description: install gitignore_global
 
