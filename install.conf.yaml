@@ -9,9 +9,9 @@
 - link:
     ~/.config/nvim: nvim
     ~/.config/yazi: yazi
+    ~/.config/ghostty: ghostty
     ~/.config/tmux/tmux.conf: tmux/tmux.conf
     ~/.tmux/plugins/tpm: tmux/plugins/tpm
-    ~/.gitignore_global: git/.gitignore_global
 
 - shell:
     -
@@ -20,4 +20,7 @@
     -
       command: cp -n git/.gitconfig ~/.gitconfig
       description: install gitconfig
+    -
+      command: cp -n git/.gitignore_global ~/.gitignore_global
+      description: install gitignore_global
 

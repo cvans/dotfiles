@@ -1,13 +1,8 @@
 [core]
-    excludesfile = ~/.gitignore_global
-	editor = nvim
-[user]
-	name = cvans
-	email = icharles@hey.com
+  excludesfile = ~/.gitignore_global
+  editor = nvim
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
-	required = true
-[credential "https://dev.azure.com"]
-	useHttpPath = true
+  required = true
