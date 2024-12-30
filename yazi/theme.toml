@@ -1,7 +1,11 @@
 [flavor]
 use = "tokyonight-night"
 
-# Override mode indicators, not working correctly in base theme
+# Theme overrides
+[manager]
+tab_active   = { fg = "#16161e", bg = "#7aa2f7" }
+tab_inactive = { fg = "#7aa2f7", bg = "#414868" }
+
 [mode]
 normal_main = { fg = "#16161e", bg = "#7aa2f7", bold = true }
 normal_alt = { fg = "#7aa2f7", bg = "#414868", bold = true }
