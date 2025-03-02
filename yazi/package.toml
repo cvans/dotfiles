@@ -1,9 +1,7 @@
-# To install/update packages, use: ya pack -i, ya pack -u
-
-[plugin]
-deps = [
-  { use = "yazi-rs/plugins:full-border", rev = "71c4fc2" },
-]
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "71c4fc2"
+hash = "a61bb2d21a08bf1d18f0a549e5eb1475"
 
 [flavor]
 deps = []
