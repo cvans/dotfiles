@@ -2,9 +2,9 @@
 use = "tokyonight-night"
 
 # Theme overrides
-[manager]
-tab_active   = { fg = "#16161e", bg = "#7aa2f7" }
-tab_inactive = { fg = "#7aa2f7", bg = "#414868" }
+[tabs]
+active   = { fg = "#16161e", bg = "#7aa2f7" }
+inactive = { fg = "#7aa2f7", bg = "#414868" }
 
 [mode]
 normal_main = { fg = "#16161e", bg = "#7aa2f7", bold = true }

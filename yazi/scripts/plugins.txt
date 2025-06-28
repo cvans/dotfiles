@@ -1,0 +1,2 @@
+# Plugins to be installed in yazi listed here
+yazi-rs/plugins:full-border
