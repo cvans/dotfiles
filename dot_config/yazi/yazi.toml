@@ -1,0 +1,16 @@
+[mgr]
+linemode = "size"
+
+[opener]
+comic = [
+  { run = '/var/lib/flatpak/app/com.yacreader.YACReader/x86_64/stable/active/export/bin/com.yacreader.YACReader "$0"', orphan = true, for = "unix" },
+]
+media = [
+  { run = 'mpv "$0"', orphan = true, for = "unix" },
+]
+
+[open]
+prepend_rules = [
+  { name = "*.cbz", use = "comic" },
+  { name = "*.mkv", use = "media" },
+]
