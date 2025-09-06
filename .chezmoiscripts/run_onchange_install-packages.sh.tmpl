@@ -1,0 +1,45 @@
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/bin/bash
+set  -eufo pipefail
+
+echo -e "Starting setup for Arch Linux packages"
+
+packages=(
+  7zip
+  btop
+  eza
+  ghostty
+  imagemagick
+  fzf
+  github-cli
+  iwd
+  lazygit
+  mise
+  mpv
+  neovim
+  tmux
+  ttf-jetbrains-mono
+  ttf-jetbrains-mono-nerd
+  yazi
+  zoxide
+)
+
+# Install a package only if missing
+install_pkg() {
+  local pkg="$1"
+  if ! yay -Qi "$pkg" >/dev/null 2>&1; then
+    # --needed avoids reinstalling if already present
+    echo "Installing $pkg"
+    yay -S --needed --noconfirm "$pkg"
+  else
+    echo "Package $pkg skipped, already present"
+  fi
+}
+
+for package in ${packages[@]}; do
+  install_pkg $package
+done
+
+echo "Finished installing Arch Linux packages"
+
+{{ end -}}

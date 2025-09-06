@@ -1,0 +1,14 @@
+#!/bin/bash
+
+yazi_pkgs=(
+  "yazi-rs/plugins:full-border"
+  "BennyOe/tokyo-night"
+)
+
+echo "Start installing yazi packages"
+
+for package in ${yazi_pkgs[@]}; do
+  ya pkg add "$package"
+done
+
+echo "Finished installing yazi packages"
