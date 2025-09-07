@@ -1,1 +1,19 @@
 README.md
+
+{{- if eq .chezmoi.os "darwin" }}
+
+# files to exclude from macOS
+.config/ghostty/linux-config
+.bash*
+
+{{- else if eq .chezmoi.os "linux" }}
+
+# files to exclude from linux
+.config/ghostty/macos-config
+.config/karabiner
+.config/skhd
+.config/starship.toml
+.aerospace.toml
+.zsh*
+
+{{ end -}}
