@@ -19,6 +19,9 @@ done
 
 echo "Finished installing yazi packages..."
 
+{{ if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+
 echo "Installing keyd configuration..."
 
 KEYD_SOURCE_FILE="{{ .chezmoi.sourceDir }}/root/etc/keyd/default.conf"
@@ -35,3 +38,22 @@ sudo cp "$KEYD_SOURCE_FILE" "$KEYD_DEST_FILE"
 
 echo "Finished keyd configuration install..." 
 
+echo "Adding current user to libvirt group..."
+
+if ! getent group libvirt >/dev/null; then
+  echo "Creating libvirt group..."
+  sudo groupadd libvirt
+fi
+
+if id -nG "$USER" | grep -qw libvirt; then
+  echo "User $USER is already in libvirt group. Nothing to do."
+else
+  sudo usermod -aG libvirt "$USER"
+  echo "User $USER added to libvirt group..."
+  echo "⚠️ Please log out and back in (or restart your session) for changes to take effect..."
+fi
+
+echo "Completed libvirt setup..."
+
+{{ end -}}
+{{ end -}}
