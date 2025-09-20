@@ -1,19 +1,28 @@
 {{ if eq .chezmoi.os "linux" -}}
 {{ if eq .chezmoi.osRelease.id "arch" -}}
-#!/bin/bash
+#!/usr/bin/env bash
+
 set  -eufo pipefail
 
-echo -e "Starting setup for Arch Linux packages"
+echo -e "Starting setup for Arch Linux packages..."
 
 packages=(
   7zip
   btop
   eza
-  ghostty
-  imagemagick
+  fcitx5
+  fcitx5-configtool
+  fcitx5-gtk
+  fcitx5-qt
+  fcitx5-mozc-ut
+  flatpak
+  flatseal
   fzf
+  keyd
+  ghostty
   github-cli
-  iwd
+  imagemagick
+  imv
   lazygit
   mise
   mpv
@@ -21,6 +30,11 @@ packages=(
   tmux
   ttf-jetbrains-mono
   ttf-jetbrains-mono-nerd
+  wireguard-tools
+  xdg-desktop-portal
+  xdg-desktop-portal-hyprland
+  xdg-desktop-portal-gtk
+  xdg-desktop-portal-kde
   yazi
   zoxide
 )
@@ -41,7 +55,33 @@ for package in ${packages[@]}; do
   install_pkg $package
 done
 
-echo "Finished installing Arch Linux packages"
+echo "Finished installing Arch Linux packages..."
+
+echo "Installing flatpak and packages..."
+
+if ! flatpak remotes | grep -q '^flathub'; then
+  sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+fi
+
+apps=(
+  com.yacreader.YACReader
+)
+
+for app in "${apps[@]}"; do
+  if flatpak info "$app" >/dev/null 2>&1; then
+    flatpak update -y --noninteractive "$app"
+  else
+    sudo flatpak install -y --noninteractive flathub "$app"
+  fi
+done
+
+if ! flatpak info com.github.tchx84.Flatseal >/dev/null 2>&1; then
+  sudo flatpak install -y --noninteractive flathub com.github.tchx84.Flatseal
+fi
+
+flatpak update -y --noninteractive --appstream
+
+echo "Finished installing flatpak and packages..."
 
 {{ end -}}
 {{ end -}}

@@ -1,9 +1,11 @@
 README.md
+root/
 
 {{- if eq .chezmoi.os "darwin" }}
 
 # files to exclude from macOS
 .config/ghostty/linux-config
+.config/hypr/
 .bash*
 
 {{- else if eq .chezmoi.os "linux" }}

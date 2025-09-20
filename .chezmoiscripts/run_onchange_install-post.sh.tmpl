@@ -1,14 +1,32 @@
-#!/bin/bash
+#!/usr/env/bin bash
+
+set -euo pipefail
 
 yazi_pkgs=(
   "yazi-rs/plugins:full-border"
   "BennyOe/tokyo-night"
 )
 
-echo "Start installing yazi packages"
+echo "Start installing yazi packages..."
 
 for package in ${yazi_pkgs[@]}; do
   ya pkg add "$package"
 done
 
-echo "Finished installing yazi packages"
+echo "Finished installing yazi packages..."
+
+echo "Installing keyd configuration..."
+
+KEYD_SOURCE_FILE = "../root/etc/keyd/default.conf"
+KEYD_DEST_FILE = "/etc/keyd/default.conf"
+
+if [[ ! -f "$KEYD_SOURCE_FILE" ]]; then
+  echo "Error: Source file '$KEYD_SOURCE_FILE' not found."
+  exit 1
+fi
+
+echo "Copying $KEYD_SOURCE_FILE to $KEYD_DEST_FILE ..."
+sudo cp "$KEYD_SOURCE_FILE" "KEYD_DEST_FILE"
+
+echo "Finished keyd configuration install..." 
+
