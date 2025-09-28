@@ -1,0 +1,16 @@
+{{ if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo "Setting default apps..."
+
+echo "Setting helium-browser as default"
+xdg-settings set default-web-browser helium-browser.desktop
+
+echo "Finished setting default apps..."
+{{ end -}}
+{{ end -}}
+
+
