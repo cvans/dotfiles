@@ -1,6 +1,6 @@
 font-family = "JetBrains Mono"
 font-style = Regular
-theme = "TokyoNight Night" # default theme
+theme = "TokyoNight Night"
 
 # Platform specific overrides
 config-file = ?macos-config

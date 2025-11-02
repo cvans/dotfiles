@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  echo "Usage: set-wallpaper <image-path>"
+  exit 2
+}
+
+# 1) Require an argument
+[[ "${1-}" != "" ]] || usage
+
+# 2) Expand ~ if present (shell doesn't expand inside variables)
+src_input=$1
+src="${src_input/#\~/$HOME}"
+
+# 3) Make path absolute (portable; avoids GNU-only readlink -f)
+case "$src" in
+  /*) abs="$src" ;;
+  *)  abs="$PWD/$src" ;;
+esac
+
+# 4) Basic validation
+if [[ ! -f "$abs" ]]; then
+  echo "Error: file not found: $src_input" >&2
+  exit 1
+fi
+
+if [[ ! -r "$abs" ]]; then
+  echo "Error: file not readable: $src_input" >&2
+  exit 1
+fi
+
+# Optional sanity check: verify it's an image (if 'file' exists)
+if command -v file >/dev/null 2>&1; then
+  mime="$(file --mime-type -Lb -- "$abs" || true)"
+  case "$mime" in
+    image/*) : ;;
+    *) echo "Error: not an image (mime: $mime)" >&2; exit 1 ;;
+  esac
+fi
+
+# 5) Ensure target directory exists
+link_dir="$HOME/.config/omarchy/current"
+mkdir -p -- "$link_dir"
+
+# 6) Create/replace the symlink
+link="$link_dir/background"
+ln -sfn -- "$abs" "$link"
+
+# Relaunch swaybg
+pkill -x swaybg
+setsid uwsm app -- swaybg -i $link -m fill >/dev/null 2>&1 &
+
+echo "Wallpaper set: $link → $abs"

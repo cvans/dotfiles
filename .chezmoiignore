@@ -6,6 +6,8 @@ root/
 # files to exclude from macOS
 .config/ghostty/linux-config
 .config/hypr/
+.local/bin/theme-set
+.local/bin/wallpaper-set
 .bash*
 
 {{- else if eq .chezmoi.os "linux" }}

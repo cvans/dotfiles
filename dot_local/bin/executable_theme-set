@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+if [[ -z $1 ]]; then
+  echo "Usage: theme-set <theme-name>"
+  exit 1
+fi
+
+THEMES_DIR="$HOME/.local/share/theme-library/"
+CURRENT_THEME_DIR="$HOME/.config/omarchy/current/theme"
+
+THEME_NAME=$(echo "$1" | sed -E 's/<[^>]+>//g' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+THEME_PATH="$THEMES_DIR/$THEME_NAME"
+
+# Check if the theme entered exists
+if [[ ! -d "$THEME_PATH" ]]; then
+  echo "Theme '$THEME_NAME' does not exist in $THEMES_DIR"
+  exit 1
+fi
+
+# Copy theme files
+ln -nsf "$THEME_PATH" "$CURRENT_THEME_DIR" 
+
+mkdir -p "$HOME/.config/btop/"
+cp "$THEME_PATH/btop.theme" "$HOME/.config/btop/current.theme"
+
+if [ -f $THEME_PATH/eza.yml ]; then
+  mkdir -p "$HOME/.config/eza/"
+  cp "$THEME_PATH/eza.yml" "$HOME/.config/eza/theme.yml"
+else
+  rm -f ~/.config/eza/theme.yml
+fi
+
+mkdir -p "$HOME/.config/ghostty/"
+cp "$THEME_PATH/ghostty.conf" "$HOME/.config/ghostty/theme"
+
+mkdir -p "$HOME/.config/mako/"
+cp "$THEME_PATH/mako.ini" "$HOME/.config/mako/config"
+
+mkdir -p "$HOME/.config/nvim/lua/plugins/"
+cp "$THEME_PATH/neovim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
+
+mkdir -p "$HOME/.config/swayosd/"
+cp "$THEME_PATH/swayosd.css" "$HOME/.config/swayosd/theme.css"
+
+mkdir -p "$HOME/.config/waybar/"
+cp "$THEME_PATH/waybar.css" "$HOME/.config/waybar/theme.css"
+
+mkdir -p "$HOME/.config/yazi/"
+cp "$THEME_PATH/yazi.toml" "$HOME/.config/yazi/theme.toml"
+
+omarchy-theme-set-browser
+
+# Restart components to apply new theme
+omarchy-restart-waybar
+omarchy-restart-swayosd
+hyprctl reload
+pkill -SIGUSR2 btop
+makoctl reload
+killall -SIGUSR2 ghostty
+
