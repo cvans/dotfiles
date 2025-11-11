@@ -48,7 +48,7 @@ cp "$THEME_PATH/waybar.css" "$HOME/.config/waybar/theme.css"
 mkdir -p "$HOME/.config/yazi/"
 cp "$THEME_PATH/yazi.toml" "$HOME/.config/yazi/theme.toml"
 
-omarchy-theme-set-browser
+# omarchy-theme-set-browser
 
 # Restart components to apply new theme
 omarchy-restart-waybar
