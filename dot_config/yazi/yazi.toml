@@ -4,9 +4,11 @@ linemode = "size"
 [opener]
 comic = [
   { run = "flatpak run com.yacreader.YACReader %s", orphan = true, for = "linux" },
+  { run = "open -a YACReader %s", orphan = true, for = "macos" },
 ]
 video = [
   { run = "mpv %s", orphan = true, for = "linux" },
+  { run = "open -a IINA %s", orphan = true, for = "macos" },
 ]
 
 [open]
