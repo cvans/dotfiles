@@ -1,0 +1,38 @@
+{{ if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+read -r -p "Install bootstrap display packages with yay? [y/N] " response
+
+case "$response" in
+  [yY]|[yY][eE][sS])
+    ;;
+  *)
+    echo "Skipping bootstrap display packages."
+    exit 0
+    ;;
+esac
+
+packages=(
+  niri                     # Wayland scrolling compositor
+  xdg-desktop-portal       # Base desktop portal service for sandboxed apps
+  xdg-desktop-portal-gtk   # GTK portal backend for file pickers and dialogs
+  xdg-desktop-portal-gnome # GNOME portal backend for settings and integration
+  gnome-keyring            # Secret storage and keyring integration
+  xwayland-satellite       # Xwayland support for niri
+  udiskie                  # Removable disk automounting
+  noctalia-shell           # Desktop shell components
+  cliphist                 # Wayland clipboard history
+  greetd                   # Minimal login manager
+  sysc-greet               # greetd greeter
+)
+
+echo "Installing bootstrap display packages..."
+
+yay -S --needed "${packages[@]}"
+
+echo "Finished installing bootstrap display packages."
+{{ end -}}
+{{ end -}}
