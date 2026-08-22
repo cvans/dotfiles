@@ -13,7 +13,8 @@ root/
 {{- else if eq .chezmoi.os "linux" }}
 
 # files to exclude from linux
-.config/ghostty/macos-config
+.config/ghostty/
+.local/share/theme-library/
 .config/karabiner
 .config/skhd
 .config/starship.toml
