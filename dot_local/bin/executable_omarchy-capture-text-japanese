@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+export OMARCHY_OCR_LANGS="jpn+eng"
+exec omarchy-capture-text "$@"

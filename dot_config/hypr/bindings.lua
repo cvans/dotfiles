@@ -85,3 +85,10 @@ o.bind("SUPER + A", "Anki", "anki")
 o.bind("SUPER + E", "File manager", { omarchy = "nautilus" })
 o.bind("SUPER + SHIFT + N", "Editor", { omarchy = "editor" })
 o.bind("SUPER + SHIFT + SLASH", "Passwords", { omarchy = "1password" })
+
+-- Japanese + English OCR
+o.bind(
+	"SUPER + SHIFT + PRINT",
+	"Extract Japanese text (OCR)",
+	"omarchy-capture-text-japanese"
+)

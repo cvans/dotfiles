@@ -19,7 +19,36 @@ else
   echo "⚠️ Please log out and back in (or restart your session) for changes to take effect..."
 fi
 
+echo "Enabling and starting libvirt..."
+sudo systemctl enable --now libvirtd.service
+
+echo "Configuring IPv4 forwarding for libvirt..."
+SYSCTL_FILE="/etc/sysctl.d/99-libvirt-forwarding.conf"
+printf '%s\n' '# Required for libvirt NAT networking' 'net.ipv4.ip_forward=1' | sudo install -Dm644 /dev/stdin "$SYSCTL_FILE"
+sudo sysctl --system >/dev/null
+
+if command -v ufw >/dev/null 2>&1; then
+  echo "Allowing libvirt forwarding through UFW..."
+  sudo ufw allow in on virbr0
+  sudo ufw route allow in on virbr0
+  sudo ufw route allow out on virbr0
+fi
+
+echo "Ensuring the default libvirt network is available..."
+if ! sudo virsh net-info default >/dev/null 2>&1; then
+  DEFAULT_NETWORK_XML="/usr/share/libvirt/networks/default.xml"
+  if [[ ! -f "$DEFAULT_NETWORK_XML" ]]; then
+    echo "Error: Cannot find $DEFAULT_NETWORK_XML" >&2
+    exit 1
+  fi
+  sudo virsh net-define "$DEFAULT_NETWORK_XML"
+fi
+
+sudo virsh net-autostart default
+if ! sudo virsh net-info default | grep -q 'Active:.*yes'; then
+  sudo virsh net-start default
+fi
+
 echo "Completed libvirt setup..."
 {{ end -}}
 {{ end -}}
-
