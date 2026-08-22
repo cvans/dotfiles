@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+{{ if eq .chezmoi.os "darwin" -}}
+# macOS initial-file deployment is intentionally empty for now.
+{{ else if eq .chezmoi.os "linux" -}}
+INITIAL_FILES_DIR="{{ .chezmoi.sourceDir }}/.chezmoitemplates/initial-files/linux"
+
+# Each entry maps a source path under initial-files/linux/ to its destination.
+initial_files=(
+  "dot_config/yazi/theme.toml|$HOME/.config/yazi/theme.toml"
+)
+
+for mapping in "${initial_files[@]}"; do
+  IFS='|' read -r source_path destination_file <<< "$mapping"
+  source_file="$INITIAL_FILES_DIR/$source_path"
+
+  if [[ -e "$destination_file" ]]; then
+    echo "Keeping existing $destination_file"
+  else
+    echo "Deploying $destination_file"
+    install -Dm644 "$source_file" "$destination_file"
+  fi
+done
+{{ end -}}
