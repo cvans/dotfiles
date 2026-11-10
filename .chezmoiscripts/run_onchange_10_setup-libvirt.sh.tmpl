@@ -29,10 +29,46 @@ if ! sudo virsh net-info default >/dev/null 2>&1; then
   sudo virsh net-define /usr/share/libvirt/networks/default.xml
 fi
 
-sudo virsh net-autostart default
-if ! sudo virsh net-info default | grep -q 'Active:.*yes'; then
+# Is a /24 (given as "a.b.c") already used by a non-libvirt interface?
+subnet_in_use() {
+  local addrs
+  addrs="$(ip -4 -o addr show | awk '$2 !~ /^virbr/ {print $4}')"
+  grep -q "^${1//./\\.}\." <<<"$addrs"
+}
+
+net_info="$(sudo virsh net-info default)"
+if ! grep -q 'Active:.*yes' <<<"$net_info"; then
+  # When this machine is itself a libvirt guest, its NIC usually sits on the
+  # host's 192.168.122.0/24 and the default network can't start. Move the
+  # inactive default network to the first free 192.168.x.0/24.
+  net_xml="$(sudo virsh net-dumpxml --inactive default)"
+  gateway="$(sed -n "s/.*<ip address='\([0-9.]*\)'.*/\1/p" <<<"$net_xml" | head -n1)"
+  current_subnet="${gateway%.*}"
+
+  if [[ -n "$current_subnet" ]] && subnet_in_use "$current_subnet"; then
+    new_subnet=""
+    for octet in $(seq 123 254); do
+      if ! subnet_in_use "192.168.$octet"; then
+        new_subnet="192.168.$octet"
+        break
+      fi
+    done
+    if [[ -z "$new_subnet" ]]; then
+      echo "Error: no free 192.168.x.0/24 subnet for the default network" >&2
+      exit 1
+    fi
+
+    echo "Subnet $current_subnet.0/24 is in use; moving default network to $new_subnet.0/24..."
+    net_xml_file="$(mktemp)"
+    sed "s/${current_subnet//./\\.}\./$new_subnet./g" <<<"$net_xml" >"$net_xml_file"
+    sudo virsh net-define "$net_xml_file"
+    rm -f "$net_xml_file"
+  fi
+
   sudo virsh net-start default
 fi
+
+sudo virsh net-autostart default
 
 echo "Completed libvirt setup..."
 {{ end -}}
