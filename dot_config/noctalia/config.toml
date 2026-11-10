@@ -1,0 +1,22 @@
+# Noctalia hand-written config (managed by chezmoi).
+#
+# Everything else is left to the Settings GUI, which writes its overrides to
+# ~/.local/state/noctalia/settings.toml (that file wins over this one).
+# Reference: https://docs.noctalia.dev/noctalia/configuration/
+
+[plugins]
+# Screen Toolkit: OCR (tesseract), translation (translate-shell), color picker,
+# QR scanning, annotation. Bound to Super+Shift+Print / Super+Shift+O in Umbriel.
+# After first login set its OCR language to "jpn+eng" (or "jpn_vert" for
+# vertical text) under Settings → Plugins → Screen Toolkit.
+enabled = ["alexander/screen-toolkit"]
+
+[theme.templates]
+# Render the wallpaper palette into other apps. List all IDs with:
+#   noctalia theme --list-templates
+enable_builtin_templates = true
+builtin_ids = ["umbriel", "ghostty", "gtk3", "gtk4"]
+
+[shell.keyboard_layout.custom_labels]
+"English (US, intl., with AltGr dead keys)" = "EN"
+"Mozc" = "あ"

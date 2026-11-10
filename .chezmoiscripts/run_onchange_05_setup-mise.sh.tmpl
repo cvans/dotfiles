@@ -1,0 +1,32 @@
+{{ if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+
+# Install mise with its official installer (https://mise.jdx.dev/installing-mise.html)
+# and the global tools from dot_config/mise/config.toml.
+# Reruns whenever the tool list changes:
+#   mise config hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+set -euo pipefail
+
+MISE_BIN="$HOME/.local/bin/mise"
+
+if [[ ! -x "$MISE_BIN" ]]; then
+  echo "Installing mise via mise.run..."
+  # Plain installer, not mise.run/bash: ~/.bashrc is managed by chezmoi and
+  # already runs `mise activate bash`.
+  curl -fsSL https://mise.run | MISE_INSTALL_HELP=0 sh
+else
+  echo "Updating mise..."
+  "$MISE_BIN" self-update --yes
+fi
+
+# Read the tool list straight from the chezmoi source so this works even if
+# ~/.config/mise/config.toml has not been written yet.
+echo "Installing global mise tools (claude, codex, node)..."
+MISE_GLOBAL_CONFIG_FILE="{{ .chezmoi.sourceDir }}/dot_config/mise/config.toml" \
+  "$MISE_BIN" install --yes
+
+echo "Finished mise setup..."
+{{ end -}}
+{{ end -}}

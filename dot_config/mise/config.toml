@@ -1,0 +1,8 @@
+# Global mise tools (managed by chezmoi).
+# Installed/updated by run_onchange_05_setup-mise.sh whenever this file changes.
+[tools]
+# AI coding CLIs (prebuilt binaries via the aqua backend)
+claude = "latest"
+codex = "latest"
+# Node LTS (carried over from the Omarchy machine; used by Neovim LSPs/plugins)
+node = "lts"

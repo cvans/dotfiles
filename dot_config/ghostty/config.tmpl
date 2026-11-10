@@ -1,6 +1,11 @@
 font-family = "JetBrains Mono"
 font-style = Regular
+{{- if eq .chezmoi.os "linux" }}
+# Rendered by Noctalia's ghostty template (~/.config/ghostty/themes/noctalia).
+theme = noctalia
+{{- else }}
 theme = "TokyoNight Night"
+{{- end }}
 
 # Platform specific overrides
 config-file = ?macos-config

@@ -8,8 +8,11 @@ set -euo pipefail
 INITIAL_FILES_DIR="{{ .chezmoi.sourceDir }}/.chezmoitemplates/initial-files/linux"
 
 # Each entry maps a source path under initial-files/linux/ to its destination.
+# These are deployed once and then owned by the app (fcitx5 rewrites its
+# profile on exit, so it cannot be a regular chezmoi-managed file).
 initial_files=(
   "dot_config/yazi/theme.toml|$HOME/.config/yazi/theme.toml"
+  "dot_config/fcitx5/profile|$HOME/.config/fcitx5/profile"
 )
 
 for mapping in "${initial_files[@]}"; do

@@ -1,0 +1,71 @@
+{{ if eq .chezmoi.os "linux" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
+#!/usr/bin/env bash
+
+# Login + session plumbing for Umbriel / Noctalia on vanilla Arch:
+#   greetd + Noctalia Greeter, gnome-keyring unlock at login, system services.
+
+set -euo pipefail
+
+echo "Configuring greetd with Noctalia Greeter..."
+
+GREETER_SESSION="$(command -v noctalia-greeter-session || echo /usr/bin/noctalia-greeter-session)"
+GREETD_CONFIG=/etc/greetd/config.toml
+
+sudo install -Dm644 /dev/stdin "$GREETD_CONFIG" <<EOF
+# Managed by chezmoi (run_onchange_10_setup-session.sh)
+[terminal]
+vt = 1
+
+[default_session]
+command = "$GREETER_SESSION"
+user = "greeter"
+EOF
+
+sudo systemd-tmpfiles --create noctalia-greeter.conf
+sudo noctalia-greeter-apply-appearance --setup-system
+
+# Unlock gnome-keyring with the login password (secrets for Chrome, Helium,
+# Discord, Noctalia's secret-service integration, etc.).
+GREETD_PAM=/etc/pam.d/greetd
+if [[ -f "$GREETD_PAM" ]] && ! grep -q pam_gnome_keyring "$GREETD_PAM"; then
+  echo "Adding gnome-keyring to $GREETD_PAM..."
+  sudo sed -i \
+    -e '/^auth.*include.*system-local-login/a auth       optional     pam_gnome_keyring.so' \
+    -e '/^session.*include.*system-local-login/a session    optional     pam_gnome_keyring.so auto_start' \
+    "$GREETD_PAM"
+fi
+
+# Replace any other display manager. Not started with --now so running
+# `chezmoi apply` from a graphical session does not kill it; reboot instead.
+current_dm="$(systemctl show -p Id --value display-manager.service 2>/dev/null || true)"
+if [[ -n "$current_dm" && "$current_dm" != "greetd.service" && "$current_dm" != "display-manager.service" ]]; then
+  echo "Disabling $current_dm..."
+  sudo systemctl disable "$current_dm"
+fi
+sudo systemctl enable greetd.service
+
+echo "Enabling system services..."
+system_services=(
+  accounts-daemon.service
+  bluetooth.service
+  docker.service
+  power-profiles-daemon.service
+)
+case "$(systemd-detect-virt --vm 2>/dev/null || true)" in
+  kvm|qemu) system_services+=(qemu-guest-agent.service) ;;
+esac
+sudo systemctl enable --now "${system_services[@]}"
+
+echo "Adding $USER to the docker group..."
+if ! id -nG "$USER" | grep -qw docker; then
+  sudo usermod -aG docker "$USER"
+  echo "⚠️ Log out and back in for docker group membership to apply..."
+fi
+
+echo "Creating XDG user directories..."
+xdg-user-dirs-update
+
+echo "Finished session setup. Reboot to reach the Noctalia Greeter."
+{{ end -}}
+{{ end -}}

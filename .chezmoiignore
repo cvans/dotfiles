@@ -5,20 +5,24 @@ root/
 
 # files to exclude from macOS
 .config/ghostty/linux-config
-.config/hypr/
-.local/bin/theme-set
-.local/bin/omarchy-capture-text-japanese
-.local/bin/wallpaper-set
+.config/umbriel/
+.config/noctalia/
+.config/libvirt/
+.config/mise/
+.config/obsidian/
+.config/helium-browser-flags.conf
+.config/chrome-flags.conf
+.config/xdg-terminals.list
 .bash*
+.inputrc
 
 {{- else if eq .chezmoi.os "linux" }}
 
 # files to exclude from linux
-.config/ghostty/
+.config/ghostty/macos-config
 .local/share/theme-library/
 .config/karabiner
 .config/skhd
-.config/starship.toml
 .aerospace.toml
 .zsh*
 

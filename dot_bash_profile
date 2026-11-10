@@ -1,0 +1,6 @@
+# Login shell: load the interactive config too.
+# start-umbriel re-enters the login shell, so anything exported here also
+# reaches the Umbriel session.
+export PATH="$HOME/.local/bin:$PATH"
+
+[[ -f ~/.bashrc ]] && . ~/.bashrc

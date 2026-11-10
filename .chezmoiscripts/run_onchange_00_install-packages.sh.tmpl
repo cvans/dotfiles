@@ -1,50 +1,204 @@
 {{ if eq .chezmoi.os "linux" -}}
-{{ if eq .chezmoi.osRelease.id "omarchy" -}}
+{{ if eq .chezmoi.osRelease.id "arch" -}}
 #!/usr/bin/env bash
 
-set  -eufo pipefail
+# Vanilla Arch Linux package installation.
+# Policy: official repositories first (pacman), AUR only when there is no
+# official package (yay), Flatpak only for apps kept there on purpose.
 
-echo -e "Starting setup for Arch Linux packages..."
+set -eufo pipefail
 
-# Packages provided by Omarchy and intentionally omitted below. Add them back
-# if this configuration is used on a plain Arch Linux installation:
-#   btop eza fcitx5 fcitx5-gtk fcitx5-qt fzf imagemagick imv lazygit
-#   mpv noto-fonts-cjk tmux xdg-desktop-portal
-#   xdg-desktop-portal-gtk xdg-desktop-portal-hyprland zoxide
-#   mise neovim ttf-jetbrains-mono ttf-jetbrains-mono-nerd
-# flatseal is installed below as a Flatpak rather than an Arch package.
+echo "Starting setup for Arch Linux packages..."
 
-packages=(
-  7zip
-  anki
-  dnsmasq
-  duf
+# ------------------------------------------------------------------------------
+# Official repositories
+# ------------------------------------------------------------------------------
+
+desktop_packages=(
+  # Noctalia shell + greeter (Umbriel itself comes from the AUR below)
+  noctalia
+  noctalia-greeter
+  greetd
+  accountsservice
+  power-profiles-daemon
+  ddcutil
+  upower
+  # Session plumbing
+  xdg-desktop-portal
+  xdg-desktop-portal-gtk
+  xorg-xwayland
+  xdg-utils
+  xdg-user-dirs
+  xdg-terminal-exec
+  pipewire
+  pipewire-alsa
+  pipewire-pulse
+  wireplumber
+  polkit
+  gnome-keyring
+  libsecret
+  bluez
+  bluez-utils
+  wl-clipboard
+  grim
+  slurp
+  # Fonts
+  noto-fonts
+  noto-fonts-cjk
+  noto-fonts-emoji
+  ttf-jetbrains-mono
+  ttf-jetbrains-mono-nerd
+)
+
+input_method_packages=(
+  # English / Spanish via us(altgr-intl), Japanese via fcitx5 + Mozc
+  fcitx5
   fcitx5-configtool
+  fcitx5-gtk
+  fcitx5-qt
   fcitx5-mozc
-  flatpak
+)
+
+ocr_packages=(
+  # Used by the Noctalia "Screen Toolkit" plugin (alexander/screen-toolkit)
+  tesseract
+  tesseract-data-eng
+  tesseract-data-jpn
+  tesseract-data-jpn_vert
+  translate-shell
+)
+
+gtk_app_packages=(
+  nautilus
+  gvfs
+  gvfs-mtp
+  gvfs-smb
+  sushi
+  file-roller
   foliate
+  loupe
+  papers
+  gnome-text-editor
+)
+
+cli_packages=(
+  7zip
+  bash-completion
+  bat
+  btop
+  duf
+  eza
+  fd
+  ffmpegthumbnailer
+  fzf
   ghostty
-  keyd
+  git
+  github-cli
+  imagemagick
+  jq
+  lazygit
+  less
+  man-db
+  neovim
+  poppler
+  ripgrep
+  starship
+  tmux
+  tree-sitter-cli
+  unzip
+  yazi
+  zoxide
+)
+
+app_packages=(
+  anki
+  discord
+  mpv
+  obsidian
+  spotify-launcher
+  yt-dlp
+)
+
+dev_packages=(
+  docker
+  docker-buildx
+  docker-compose
+  lazydocker
+)
+
+virtualization_packages=(
+  dnsmasq
   edk2-ovmf
+  iptables
   libvirt
   qemu-desktop
-  samba
   swtpm
-  tesseract-data-jpn
   virt-manager
+)
+
+system_packages=(
+  flatpak
+  keyd
+  samba
   wireguard-tools
-  yazi
 )
 
-# Packages from the AUR.
+packages=(
+  "${desktop_packages[@]}"
+  "${input_method_packages[@]}"
+  "${ocr_packages[@]}"
+  "${gtk_app_packages[@]}"
+  "${cli_packages[@]}"
+  "${app_packages[@]}"
+  "${dev_packages[@]}"
+  "${virtualization_packages[@]}"
+  "${system_packages[@]}"
+)
+
+# Guest tools when this install is itself a VM (used for test runs).
+case "$(systemd-detect-virt --vm 2>/dev/null || true)" in
+  kvm|qemu)
+    packages+=(qemu-guest-agent spice-vdagent)
+    ;;
+esac
+
+sudo pacman -Syu --needed --noconfirm "${packages[@]}"
+
+echo "Finished installing official packages..."
+
+# ------------------------------------------------------------------------------
+# AUR
+# ------------------------------------------------------------------------------
+
+if ! command -v yay >/dev/null 2>&1; then
+  echo "Bootstrapping yay from the AUR..."
+  sudo pacman -S --needed --noconfirm base-devel git
+  yay_build_dir="$(mktemp -d)"
+  git clone --depth 1 https://aur.archlinux.org/yay-bin.git "$yay_build_dir/yay-bin"
+  (cd "$yay_build_dir/yay-bin" && makepkg -si --noconfirm)
+  rm -rf "$yay_build_dir"
+fi
+
 aur_packages=(
+  # Umbriel compositor (pulls in xdg-desktop-portal-umbriel-git)
+  umbriel-git
   helium-browser-bin
+  google-chrome
+  1password
 )
 
-omarchy pkg add "${packages[@]}"
-omarchy pkg aur add "${aur_packages[@]}"
+# The 1password PKGBUILD verifies a PGP signature; import the signing key first.
+if ! gpg --list-keys 3FEF9748469ADBE15DA7CA80AC2D62742012EA22 >/dev/null 2>&1; then
+  curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --import
+fi
 
-echo "Finished installing Arch Linux packages..."
+yay -S --needed --noconfirm "${aur_packages[@]}"
+
+echo "Finished installing AUR packages..."
+
+# ------------------------------------------------------------------------------
+# Flatpak
+# ------------------------------------------------------------------------------
 
 echo "Installing flatpak and packages..."
 

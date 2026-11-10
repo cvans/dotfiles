@@ -1,26 +1,81 @@
 # If not running interactively, don't do anything (leave this at the top of this file)
 [[ $- != *i* ]] && return
 
-# All the default Omarchy aliases and functions
-# (don't mess with these directly, just overwrite them here!)
-# /etc/omarchy.conf is written by omarchy-dev-link. When absent, force the
-# package default instead of preserving a stale inherited dev-link value before
-# we decide which rc file to source.
-if [[ -f /etc/omarchy.conf ]]; then
-  source /etc/omarchy.conf
-  export OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
-else
-  export OMARCHY_PATH=/usr/share/omarchy
-fi
-source "$OMARCHY_PATH/default/bash/rc"
+# Standalone bash config for vanilla Arch (ported from Omarchy's defaults).
 
-# Add your own exports, aliases, and functions here.
-#
-# Make an alias for invoking commands you use constantly
-# alias p='python'
+# ------------------------------------------------------------------------------
+# Environment
+# ------------------------------------------------------------------------------
+export EDITOR=nvim
+export SUDO_EDITOR="$EDITOR"
+export PATH="$HOME/.local/bin:$PATH"
+
+# ------------------------------------------------------------------------------
+# Shell options and history
+# ------------------------------------------------------------------------------
+shopt -s histappend checkwinsize
+HISTCONTROL=ignoreboth
+HISTSIZE=32768
+HISTFILESIZE="${HISTSIZE}"
+
+if [[ ! -v BASH_COMPLETION_VERSINFO && -f /usr/share/bash-completion/bash_completion ]]; then
+  source /usr/share/bash-completion/bash_completion
+fi
+
+# ------------------------------------------------------------------------------
+# Tools
+# ------------------------------------------------------------------------------
+# Command hashing off so mise shims resolve correctly
+set +h
+command -v mise &>/dev/null && eval "$(mise activate bash)"
+command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
+[[ ${TERM:-} != "dumb" ]] && command -v starship &>/dev/null && eval "$(starship init bash)"
+# fzf key bindings only (Ctrl-R, Ctrl-T, Alt-C)
+[[ -f /usr/share/fzf/key-bindings.bash ]] && source /usr/share/fzf/key-bindings.bash
+
+# ------------------------------------------------------------------------------
+# Aliases and functions
+# ------------------------------------------------------------------------------
+if command -v eza &>/dev/null; then
+  alias ls='eza -lh --group-directories-first --icons=auto'
+  alias lsa='ls -a'
+  alias lt='eza --tree --level=2 --long --icons --git'
+  alias lta='lt -a'
+fi
+
+alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
+alias eff='$EDITOR "$(ff)"'
+
+if command -v zoxide &>/dev/null; then
+  alias cd="zd"
+  zd() {
+    if (( $# == 0 )); then
+      builtin cd ~ || return
+    elif [[ -d $1 ]]; then
+      builtin cd "$1" || return
+    else
+      z "$@" && printf "\U000F17A9 " && pwd || echo "Error: Directory not found"
+    fi
+  }
+fi
+
+open() (
+  xdg-open "$@" >/dev/null 2>&1 &
+)
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
 alias n="nvim"
+alias d='docker'
+alias g='git'
+alias gcm='git commit -m'
+alias gcam='git commit -a -m'
+alias gcad='git commit -a --amend'
+alias t='tmux attach || tmux new -s Work'
 alias exp="nautilus . & disown"
-alias bgs="omarchy-theme-bg-set"
+
 function yy() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
   yazi "$@" --cwd-file="$tmp"
@@ -29,5 +84,3 @@ function yy() {
   fi
   rm -f -- "$tmp"
 }
-
-export PATH=$HOME/.local/bin/:$PATH

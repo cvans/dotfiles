@@ -3,8 +3,11 @@ window-padding-y = 14
 resize-overlay = never
 window-inherit-working-directory = false
 
+# Umbriel draws server-side borders; drop Ghostty's GTK header bar.
+window-decoration = none
+
 # Slowdown mouse scrolling
 # mouse-scroll-multiplier = 0.95
 
-# Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
+# Avoid io_uring slowness seen on some kernels (https://github.com/ghostty-org/ghostty/discussions/3224)
 async-backend = epoll
