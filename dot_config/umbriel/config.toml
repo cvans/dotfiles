@@ -22,8 +22,9 @@ files = ["noctalia.toml"]
 [general]
 mod_key = "Super"
 # fcitx5 is started here instead of via XDG autostart so it is up before
-# the first text field appears.
-autostart = ["noctalia", "fcitx5 -d --replace"]
+# the first text field appears. The Vicinae server stays resident so
+# `vicinae toggle` opens instantly.
+autostart = ["noctalia", "fcitx5 -d --replace", "vicinae server --replace"]
 
 # ==============================================================================
 # Environment
@@ -85,8 +86,12 @@ natural_scroll = true
 "Mod+Shift+N" = { action = "spawn ghostty -e nvim", repeat = false }
 "Mod+Shift+Slash" = { action = "spawn 1password", repeat = false }
 
+# Launcher: Vicinae (https://docs.vicinae.com). Noctalia's launcher stays
+# available on Mod+Ctrl+L.
+"Mod" = "spawn vicinae toggle"
+"Mod+Ctrl+L" = "spawn noctalia msg panel-toggle launcher"
+
 # Noctalia shell
-"Mod" = "spawn noctalia msg panel-toggle launcher"
 "Mod+S" = "spawn noctalia msg panel-toggle control-center"
 "Mod+Ctrl+S" = "spawn noctalia msg settings-toggle"
 "Alt+Tab" = "spawn noctalia msg window-switcher hold"
@@ -255,6 +260,12 @@ blur_popups = true
 [[layer_rule]]
 match.namespace = "^noctalia-(notification|dock|panel|attached-panel|osd)$"
 blur_optimized = false
+
+# Vicinae: blur behind its layer-shell window and dim the output below it.
+[[layer_rule]]
+match.namespace = "^vicinae$"
+blur = true
+dim_behind = 0.3
 
 # ==============================================================================
 # Overview

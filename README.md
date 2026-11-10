@@ -55,7 +55,8 @@ Linux scripts only run when `/etc/os-release` reports `ID=arch`.
 
 | Keys | Action |
 | --- | --- |
-| `Super` | Noctalia launcher |
+| `Super` | Vicinae launcher |
+| `Super+Ctrl+L` | Noctalia launcher |
 | `Super+Return` | Ghostty |
 | `Super+B` / `Super+Shift+B` | Helium / Helium incognito |
 | `Super+E` | Nautilus |
